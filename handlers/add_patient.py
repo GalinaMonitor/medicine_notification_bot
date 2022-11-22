@@ -5,6 +5,7 @@ from aiogram_calendar import SimpleCalendar
 from aiogram_calendar.simple_calendar import calendar_callback
 
 from bot import dp, NewPatientStatesGroup, bot
+from db.exceptions import NotFoundException
 from db.services.patients import PatientService
 from keyboards.keyboard import get_cancel_kb, get_intro_kb, get_true_or_false
 
@@ -16,7 +17,7 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
 
 	await state.finish()
 	await message.reply(
-		'Вы прервали создание пациента',
+		'Вы прервали операцию',
 		reply_markup=get_intro_kb()
 	)
 
@@ -45,11 +46,17 @@ async def check_history_number(message: types.Message):
 
 @dp.message_handler(state=NewPatientStatesGroup.history_number)
 async def load_history_number(message: types.Message, state: FSMContext) -> None:
-	async with state.proxy() as data:
-		data['history_number'] = int(message.text)
+	try:
+		PatientService.get_patient(int(message.text))
+	except NotFoundException:
+		async with state.proxy() as data:
+			data['history_number'] = int(message.text)
 
-	await message.reply('Введите ФИО')
-	await NewPatientStatesGroup.next()
+		await message.reply('Введите ФИО')
+		await NewPatientStatesGroup.next()
+		return
+
+	await message.reply('Пациент с этим номером в базе уже есть. Введите другой номер истории болезни')
 
 
 @dp.message_handler(state=NewPatientStatesGroup.fullname)
