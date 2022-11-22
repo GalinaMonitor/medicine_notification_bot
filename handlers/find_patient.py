@@ -32,6 +32,7 @@ async def find_patient(message: types.Message, state: FSMContext) -> None:
 			День поступления: {patient.admission_date}
 			День выписки: {patient.discharge_date}
 			ОПП: {'Да' if patient.is_opp else 'Нет'}
+			Гепа-мерц: {'Да' if patient.is_gepa_merz else 'Нет'}
 			'''
 			, reply_markup=get_intro_kb()
 		)

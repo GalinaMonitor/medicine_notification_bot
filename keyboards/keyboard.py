@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 
 
 def get_intro_kb() -> ReplyKeyboardMarkup:
-	kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+	kb = ReplyKeyboardMarkup(resize_keyboard=True)
 	kb.add(KeyboardButton('Добавить пациента'))
 	kb.insert(KeyboardButton('Найти пациента по номеру истории болезни'))
 	kb.add(KeyboardButton('Напоминания на сегодня'))
@@ -10,7 +10,7 @@ def get_intro_kb() -> ReplyKeyboardMarkup:
 
 
 def get_cancel_kb() -> ReplyKeyboardMarkup:
-	kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+	kb = ReplyKeyboardMarkup(resize_keyboard=True)
 	kb.add(KeyboardButton('/cancel'))
 
 	return kb

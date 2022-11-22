@@ -32,6 +32,7 @@ async def subscriptions_info(message: types.Message):
 		- День поступления
 		- День выписки
 		- ОПП
+		Для отмены операции нажмите кнопку /cancel в скрытом меню
 		''',
 		reply_markup=get_cancel_kb()
 	)
