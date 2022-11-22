@@ -24,7 +24,7 @@ services:
       timeout: 5s
       retries: 5
 
-  bot:
+  medicine_bot:
     networks:
       network:
         ipv4_address: 10.1.0.11
@@ -33,16 +33,18 @@ services:
       - ./database.db:/bot/database.db
     env_file:
       - .env
-    container_name: bot
+    container_name: medicine_bot
 
   celery_beat:
     networks:
       network:
         ipv4_address: 10.1.0.12
-    image: bot
+    image: medicinebot-medicine_bot
     env_file:
       - .env
     container_name: celery_beat
+    depends_on:
+      - medicine_bot
     entrypoint: [ "celery", "-A", "async_tasks.celery_init", "beat", "--loglevel=INFO" ]
 
 
@@ -50,7 +52,10 @@ services:
     networks:
       network:
         ipv4_address: 10.1.0.13
-    image: bot
+    image: medicinebot-medicine_bot
     env_file:
       - .env
+    container_name: celery_worker
+    depends_on:
+      - medicine_bot
     entrypoint: [ "celery", "-A", "async_tasks.celery_init", "worker", "--loglevel=INFO" ]
