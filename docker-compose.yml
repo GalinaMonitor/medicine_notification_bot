@@ -77,15 +77,13 @@ services:
 
 
   pgadmin:
-    container_name: crm-pgadmin
+    container_name: pgadmin
     networks:
       network:
         ipv4_address: 10.1.0.9
     image: dpage/pgadmin4
     env_file:
       - .env
-    volumes:
-      - /data/pgadmin:/var/lib/pgadmin
     ports:
       - '3232:80'
     depends_on:
