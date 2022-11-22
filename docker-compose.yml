@@ -14,8 +14,6 @@ services:
         ipv4_address: 10.1.0.102
     image: redis/redis-stack
     container_name: redis
-    volumes:
-      - /data/redis:/data
     ports:
       - "6379:6379"
     healthcheck:
@@ -24,27 +22,27 @@ services:
       timeout: 5s
       retries: 5
 
-  medicine_bot:
+  bot:
     networks:
       network:
         ipv4_address: 10.1.0.11
     build: .
-    volumes:
-      - ./database.db:/bot/database.db
     env_file:
       - .env
-    container_name: medicine_bot
+    container_name: bot
+    depends_on:
+      - postgres
 
   celery_beat:
     networks:
       network:
         ipv4_address: 10.1.0.12
-    image: medicinebot-medicine_bot
+    image: medicine_notification_bot-bot
     env_file:
       - .env
     container_name: celery_beat
     depends_on:
-      - medicine_bot
+      - bot
     entrypoint: [ "celery", "-A", "async_tasks.celery_init", "beat", "--loglevel=INFO" ]
 
 
@@ -52,10 +50,27 @@ services:
     networks:
       network:
         ipv4_address: 10.1.0.13
-    image: medicinebot-medicine_bot
+    image: medicine_notification_bot-bot
     env_file:
       - .env
     container_name: celery_worker
     depends_on:
-      - medicine_bot
+      - bot
     entrypoint: [ "celery", "-A", "async_tasks.celery_init", "worker", "--loglevel=INFO" ]
+
+
+  postgres:
+    networks:
+      network:
+        ipv4_address: 10.1.0.100
+    image: postgres:13.3
+    container_name: postgres
+    env_file:
+      - .env
+    volumes:
+      - /data/postgresql/bot:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U bot -d bot_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

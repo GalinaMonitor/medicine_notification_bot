@@ -3,6 +3,8 @@ from typing import Optional
 
 from sqlmodel import SQLModel, Field, create_engine
 
+from config import settings
+
 
 class Doctor(SQLModel, table=True):
 	id: Optional[int] = Field(default=None, primary_key=True)
@@ -20,8 +22,5 @@ class Patient(SQLModel, table=True):
 	is_gepa_merz: bool
 
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-engine = create_engine(sqlite_url, echo=True)
+engine = create_engine(settings.db_conn_string, echo=True)
 SQLModel.metadata.create_all(engine)
