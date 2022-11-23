@@ -19,7 +19,7 @@ async def start(message: types.Message, state: FSMContext) -> None:
 		DoctorService.create_doctor(id=message.from_user.id, fullname=message.from_user.full_name)
 		doctor = DoctorService.get_doctor(message.from_user.id)
 	await message.answer(
-		f'Здравствуйте, {doctor.fullname}',
+		f'Здравствуйте, {doctor.fullname}. Тест',
 		reply_markup=get_intro_kb()
 	)
 	await message.delete()
