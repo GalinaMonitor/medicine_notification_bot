@@ -23,7 +23,7 @@ jobs:
       LOGIN: ${{ secrets.DOCKER_LOGIN }}
       NAME: ${{ secrets.DOCKER_NAME }}
       KEY: ${{ secrets.SSH_KEY }}
-    uses: appleboy/ssh-action
+    uses: appleboy/ssh-action@master
     with:
       host: ${{ secrets.HOST }}
       username: ${{ secrets.USERNAME }}
