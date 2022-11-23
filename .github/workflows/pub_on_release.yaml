@@ -23,13 +23,15 @@ jobs:
       LOGIN: ${{ secrets.DOCKER_LOGIN }}
       NAME: ${{ secrets.DOCKER_NAME }}
       KEY: ${{ secrets.SSH_KEY }}
-    uses: appleboy/ssh-action@master
-    with:
-      host: ${{ secrets.HOST }}
-      username: ${{ secrets.USERNAME }}
-      key: ${{ secrets.KEY }}
-      port: ${{ secrets.PORT }}
-      script: |
-        cd ../medicine_notification_bot
-        echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
-        docker compose up --build -d
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ../medicine_notification_bot
+            echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+            docker compose up --build -d
