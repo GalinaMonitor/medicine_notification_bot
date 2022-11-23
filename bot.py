@@ -18,9 +18,12 @@ class NewPatientStatesGroup(StatesGroup):
 	is_gepa_merz = State()
 
 
-class FindPatientStatesGroup(StatesGroup):
-	question = State()
-	answer = State()
+class EditPatientStatesGroup(StatesGroup):
+	request = State()
+	result = State()
+	edit = State()
+	admission_date = State()
+	discharge_date = State()
 
 
 if __name__ == '__main__':

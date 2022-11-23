@@ -21,3 +21,13 @@ def get_true_or_false() -> InlineKeyboardMarkup:
 	kb.insert(InlineKeyboardButton(text='Да', callback_data='True'))
 	kb.insert(InlineKeyboardButton(text='Нет', callback_data='False'))
 	return kb
+
+
+def get_edit_patient_kb() -> InlineKeyboardMarkup:
+	kb = InlineKeyboardMarkup(row_width=1)
+	kb.insert(InlineKeyboardButton(text='Добавить/удалить с ОПП', callback_data='edit_patient_is_opp'))
+	kb.insert(InlineKeyboardButton(text='Добавить/удалить с Гепа-Мерц', callback_data='edit_patient_is_gepa_merz'))
+	kb.insert(InlineKeyboardButton(text='Изменить дату поступления', callback_data='edit_patient_admission_date'))
+	kb.insert(InlineKeyboardButton(text='Изменить дату выписки', callback_data='edit_patient_discharge_date'))
+	kb.insert(InlineKeyboardButton(text='Удалить пациента', callback_data='delete_patient'))
+	return kb

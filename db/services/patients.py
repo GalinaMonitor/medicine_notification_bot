@@ -37,8 +37,11 @@ class PatientService:
 	@staticmethod
 	def create_patient(**args):
 		with Session(engine) as session:
-			session.add(Patient(**args))
+			patient = Patient(**args)
+			session.add(patient)
 			session.commit()
+			session.refresh(patient)
+			return patient
 
 	@staticmethod
 	def update_patient(history_number: int, **args):
@@ -51,6 +54,19 @@ class PatientService:
 			for key, value in args.items():
 				setattr(patient, key, value)
 			session.add(patient)
+			session.commit()
+			session.refresh(patient)
+			return patient
+
+	@staticmethod
+	def delete_patient(history_number: int):
+		with Session(engine) as session:
+			statement = select(Patient).where(Patient.history_number == history_number)
+			patient = session.exec(statement).first()
+			if not patient:
+				raise NotFoundException()
+
+			session.delete(patient)
 			session.commit()
 
 	@staticmethod

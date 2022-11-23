@@ -53,3 +53,7 @@ async def notification_info(message: types.Message):
 			await message.reply(
 				'\n'.join(gepa_merz_notification_list)
 			)
+		if not len(opp_notification_list) and not len(gepa_merz_notification_list):
+			await message.reply(
+				'Напоминаний на сегодня нет'
+			)

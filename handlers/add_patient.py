@@ -78,8 +78,9 @@ async def load_admission_date(callback_query: CallbackQuery, callback_data: dict
 		)
 		async with state.proxy() as data:
 			data['admission_date'] = date
-		await callback_query.message.answer(f'Введите дату выписки',
-											reply_markup=await SimpleCalendar().start_calendar())
+		await callback_query.message.answer(
+			f'Введите дату выписки',
+			reply_markup=await SimpleCalendar().start_calendar())
 		await NewPatientStatesGroup.next()
 
 
