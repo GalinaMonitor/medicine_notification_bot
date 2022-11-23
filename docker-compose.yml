@@ -26,7 +26,7 @@ services:
     networks:
       network:
         ipv4_address: 10.1.0.11
-    image: gmonitor/medical_notification_bot
+    image: gmonitor/medical_notification_bot:master
     env_file:
       - .env
     container_name: bot
@@ -37,7 +37,7 @@ services:
     networks:
       network:
         ipv4_address: 10.1.0.12
-    image: gmonitor/medical_notification_bot
+    image: gmonitor/medical_notification_bot:master
     env_file:
       - .env
     container_name: celery_beat
@@ -50,7 +50,7 @@ services:
     networks:
       network:
         ipv4_address: 10.1.0.13
-    image: gmonitor/medical_notification_bot
+    image: gmonitor/medical_notification_bot:master
     env_file:
       - .env
     container_name: celery_worker
