@@ -1,6 +1,6 @@
 name: Publish on Docker Hub and Deploy
 
-on: [push]
+on: [ push ]
 
 jobs:
   build_and_pub:
