@@ -35,4 +35,4 @@ jobs:
           script: |
             cd ../medicine_notification_bot
             echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
-            docker compose up --build -d
+            docker compose pull && docker compose up --build -d
