@@ -12,7 +12,7 @@ from keyboards.keyboard import get_cancel_kb, get_intro_kb, get_true_or_false
 
 @dp.message_handler(lambda message: message.text == "Добавить пациента", state=None)
 async def subscriptions_info(message: types.Message):
-	await message.reply(
+	await message.answer(
 		'''
 		Для регистрации пациента нужны следующие данные:
 		- Номер истории болезни
@@ -24,13 +24,13 @@ async def subscriptions_info(message: types.Message):
 		''',
 		reply_markup=get_cancel_kb()
 	)
-	await message.reply('Введите номер истории болезни')
+	await message.answer('Введите номер истории болезни')
 	await NewPatientStatesGroup.history_number.set()
 
 
 @dp.message_handler(lambda message: not message.text.isdigit(), state=NewPatientStatesGroup.history_number)
 async def check_history_number(message: types.Message):
-	await message.reply('Введите правильный номер истории болезни')
+	await message.answer('Введите правильный номер истории болезни')
 
 
 @dp.message_handler(state=NewPatientStatesGroup.history_number)
@@ -41,11 +41,11 @@ async def load_history_number(message: types.Message, state: FSMContext) -> None
 		async with state.proxy() as data:
 			data['history_number'] = int(message.text)
 
-		await message.reply('Введите ФИО')
+		await message.answer('Введите ФИО')
 		await NewPatientStatesGroup.next()
 		return
 
-	await message.reply('Пациент с этим номером в базе уже есть. Введите другой номер истории болезни')
+	await message.answer('Пациент с этим номером в базе уже есть. Введите другой номер истории болезни')
 
 
 @dp.message_handler(state=NewPatientStatesGroup.fullname)
@@ -53,7 +53,7 @@ async def load_fullname(message: types.Message, state: FSMContext) -> None:
 	async with state.proxy() as data:
 		data['fullname'] = message.text
 
-	await message.reply('Введите дату поступления', reply_markup=await SimpleCalendar().start_calendar())
+	await message.answer('Введите дату поступления', reply_markup=await SimpleCalendar().start_calendar())
 	await NewPatientStatesGroup.next()
 
 

@@ -26,7 +26,7 @@ def get_patient_info(patient: Patient):
 @dp.message_handler(lambda message: message.text == 'Найти пациента по номеру истории болезни', state=None)
 async def find_patient_answer(message: types.Message):
 	await EditPatientStatesGroup.request.set()
-	await message.reply(
+	await message.answer(
 		'Введите номер истории болезни',
 		reply_markup=get_cancel_kb()
 	)
@@ -34,7 +34,7 @@ async def find_patient_answer(message: types.Message):
 
 @dp.message_handler(lambda message: not message.text.isdigit(), state=EditPatientStatesGroup.request)
 async def check_history_number(message: types.Message):
-	await message.reply('Введите правильный номер истории болезни')
+	await message.answer('Введите правильный номер истории болезни')
 
 
 @dp.message_handler(state=EditPatientStatesGroup.request)

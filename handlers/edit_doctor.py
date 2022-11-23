@@ -42,7 +42,7 @@ async def edit_doctor(callback_query: CallbackQuery, state: FSMContext):
 		doctor = DoctorService.get_doctor(telegram_id=data['id'])
 
 	if param == 'access_opp':
-		doctor = DoctorService.update_doctor(data['id'], access_opp=not doctor.access_gepa_merz)
+		doctor = DoctorService.update_doctor(data['id'], access_opp=not doctor.access_opp)
 	elif param == 'access_gepa_merz':
 		doctor = DoctorService.update_doctor(data['id'], access_gepa_merz=not doctor.access_gepa_merz)
 

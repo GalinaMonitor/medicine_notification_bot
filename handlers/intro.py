@@ -10,7 +10,7 @@ from keyboards.keyboard import get_intro_kb
 from service_utils import check_notifications_opp, check_notifications_gepa_merz
 
 
-@dp.message_handler(commands=['start'])
+@dp.message_handler(commands=['start'], state='*')
 async def start(message: types.Message, state: FSMContext) -> None:
 	await state.finish()
 	try:
@@ -22,7 +22,6 @@ async def start(message: types.Message, state: FSMContext) -> None:
 		f'Здравствуйте, {doctor.fullname}',
 		reply_markup=get_intro_kb()
 	)
-	await message.delete()
 
 
 @dp.message_handler(lambda message: message.text in ['/cancel', 'Вернуться'], state='*')
@@ -31,7 +30,7 @@ async def cmd_cancel(message: types.Message, state: FSMContext):
 		return
 
 	await state.finish()
-	await message.reply(
+	await message.answer(
 		'Вы прервали операцию',
 		reply_markup=get_intro_kb()
 	)
@@ -60,14 +59,19 @@ async def notification_info(message: types.Message):
 
 	for doctor in DoctorService.get_doctors():
 		if doctor.access_opp and len(opp_notification_list):
-			await message.reply(
+			await message.answer(
 				'\n'.join(opp_notification_list)
 			)
 		if doctor.access_gepa_merz and len(gepa_merz_notification_list):
-			await message.reply(
+			await message.answer(
 				'\n'.join(gepa_merz_notification_list)
 			)
-		if not len(opp_notification_list) and not len(gepa_merz_notification_list):
-			await message.reply(
-				'Напоминаний на сегодня нет'
+		if doctor.access_opp and not len(opp_notification_list):
+			await message.answer(
+				'Напоминаний по ОПП на сегодня нет'
 			)
+		if doctor.access_gepa_merz and not len(gepa_merz_notification_list):
+			await message.answer(
+				'Напоминаний по Гепа-Мерц на сегодня нет'
+			)
+
