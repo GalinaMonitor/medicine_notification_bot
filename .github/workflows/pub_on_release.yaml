@@ -1,8 +1,6 @@
 name: Publish on Docker Hub and Deploy
 
-on:
-  release:
-    types: [ published ]
+on: [push]
 
 jobs:
   build_and_pub:
