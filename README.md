@@ -7,6 +7,6 @@
 - Celery
 - Docker/Docker-compose
 ## Getting started
-Создать в корневой директории .env файл с переменными redis_url, bot_token
+Создать файл .env на основе example.env
 
 `docker compose up -d`
