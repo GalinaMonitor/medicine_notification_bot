@@ -23,7 +23,7 @@ def get_patient_info(patient: Patient):
 	'''
 
 
-@dp.message_handler(lambda message: message.text == 'Найти пациента по номеру истории болезни')
+@dp.message_handler(lambda message: message.text == 'Найти пациента по номеру истории болезни', state=None)
 async def find_patient_answer(message: types.Message):
 	await EditPatientStatesGroup.request.set()
 	await message.reply(

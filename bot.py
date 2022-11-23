@@ -26,9 +26,14 @@ class EditPatientStatesGroup(StatesGroup):
 	discharge_date = State()
 
 
+class EditDoctorStatesGroup(StatesGroup):
+	edit = State()
+
+
 if __name__ == '__main__':
 	from handlers.intro import *
 	from handlers.add_patient import *
-	from handlers.find_patient import *
+	from handlers.edit_patient import *
+	from handlers.edit_doctor import *
 
 	executor.start_polling(dp, skip_updates=True)

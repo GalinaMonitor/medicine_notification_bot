@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 
 from bot import dp
 from db.exceptions import NotFoundException
@@ -10,7 +11,8 @@ from service_utils import check_notifications_opp, check_notifications_gepa_merz
 
 
 @dp.message_handler(commands=['start'])
-async def start(message: types.Message) -> None:
+async def start(message: types.Message, state: FSMContext) -> None:
+	await state.finish()
 	try:
 		doctor = DoctorService.get_doctor(message.from_user.id)
 	except NotFoundException:
@@ -23,7 +25,19 @@ async def start(message: types.Message) -> None:
 	await message.delete()
 
 
-@dp.message_handler(lambda message: message.text == "Напоминания на сегодня")
+@dp.message_handler(lambda message: message.text in ['/cancel', 'Вернуться'], state='*')
+async def cmd_cancel(message: types.Message, state: FSMContext):
+	if state is None:
+		return
+
+	await state.finish()
+	await message.reply(
+		'Вы прервали операцию',
+		reply_markup=get_intro_kb()
+	)
+
+
+@dp.message_handler(lambda message: message.text == "Напоминания на сегодня", state=None)
 async def notification_info(message: types.Message):
 	today = datetime.now().date()
 	opp_notification_list = []

@@ -10,19 +10,7 @@ from db.services.patients import PatientService
 from keyboards.keyboard import get_cancel_kb, get_intro_kb, get_true_or_false
 
 
-@dp.message_handler(commands=['cancel'], state='*')
-async def cmd_cancel(message: types.Message, state: FSMContext):
-	if state is None:
-		return
-
-	await state.finish()
-	await message.reply(
-		'Вы прервали операцию',
-		reply_markup=get_intro_kb()
-	)
-
-
-@dp.message_handler(lambda message: message.text == "Добавить пациента")
+@dp.message_handler(lambda message: message.text == "Добавить пациента", state=None)
 async def subscriptions_info(message: types.Message):
 	await message.reply(
 		'''

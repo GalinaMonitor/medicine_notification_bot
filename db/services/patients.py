@@ -16,6 +16,21 @@ class DoctorService:
 			return doctor
 
 	@staticmethod
+	def update_doctor(telegram_id: int, **args):
+		with Session(engine) as session:
+			statement = select(Doctor).where(Doctor.id == telegram_id)
+			doctor = session.exec(statement).first()
+			if not doctor:
+				raise NotFoundException()
+
+			for key, value in args.items():
+				setattr(doctor, key, value)
+			session.add(doctor)
+			session.commit()
+			session.refresh(doctor)
+			return doctor
+
+	@staticmethod
 	def get_doctor(telegram_id: int) -> Doctor:
 		with Session(engine) as session:
 			statement = select(Doctor).where(Doctor.id == telegram_id)
