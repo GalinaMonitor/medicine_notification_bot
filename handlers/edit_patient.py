@@ -15,7 +15,7 @@ def get_patient_info(patient: Patient):
 	Номер истории болезни: {patient.history_number}
 	ФИО: {patient.fullname}
 	День поступления: {patient.admission_date}
-	День выписки: {patient.discharge_date}
+	День выписки: {patient.discharge_date if patient.discharge_date else 'Нет'}
 	ОПП: {'Да' if patient.is_opp else 'Нет'}
 	Гепа-мерц: {'Да' if patient.is_gepa_merz else 'Нет'}
 	

@@ -67,9 +67,24 @@ async def load_admission_date(callback_query: CallbackQuery, callback_data: dict
 		async with state.proxy() as data:
 			data['admission_date'] = date
 		await callback_query.message.answer(
-			f'Введите дату выписки',
-			reply_markup=await SimpleCalendar().start_calendar())
+			f'Пациент уже выписался?',
+			reply_markup=get_true_or_false()
+		)
 		await NewPatientStatesGroup.next()
+
+
+@dp.callback_query_handler(lambda call: call.data in ['True', 'False'], state=NewPatientStatesGroup.discharge_date)
+async def is_discharge_date(callback_query: CallbackQuery):
+	if callback_query.data == 'True':
+		await callback_query.message.answer(
+			f'Введите дату выписки',
+			reply_markup=await SimpleCalendar().start_calendar()
+		)
+	else:
+		await NewPatientStatesGroup.next()
+		await callback_query.message.answer(
+			f'Пациент с ОПП?', reply_markup=get_true_or_false()
+		)
 
 
 @dp.callback_query_handler(calendar_callback.filter(), state=NewPatientStatesGroup.discharge_date)
