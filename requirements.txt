@@ -33,3 +33,4 @@ wcwidth==0.2.5
 yarl==1.8.1
 redis==4.3.4
 psycopg2-binary==2.9.5
+openpyxl==3.0.10

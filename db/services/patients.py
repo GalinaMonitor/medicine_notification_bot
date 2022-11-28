@@ -59,7 +59,7 @@ class PatientService:
 			return patient
 
 	@staticmethod
-	def update_patient(history_number: int, **args):
+	def update_patient(history_number: str, **args):
 		with Session(engine) as session:
 			statement = select(Patient).where(Patient.history_number == history_number)
 			patient = session.exec(statement).first()
@@ -74,7 +74,7 @@ class PatientService:
 			return patient
 
 	@staticmethod
-	def delete_patient(history_number: int):
+	def delete_patient(history_number: str):
 		with Session(engine) as session:
 			statement = select(Patient).where(Patient.history_number == history_number)
 			patient = session.exec(statement).first()
@@ -85,7 +85,7 @@ class PatientService:
 			session.commit()
 
 	@staticmethod
-	def get_patient(history_number: int) -> Patient:
+	def get_patient(history_number: str) -> Patient:
 		with Session(engine) as session:
 			statement = select(Patient).where(Patient.history_number == history_number)
 			patient = session.exec(statement).first()

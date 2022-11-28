@@ -7,6 +7,7 @@ def get_intro_kb() -> ReplyKeyboardMarkup:
 	kb.insert(KeyboardButton('Найти пациента по номеру истории болезни'))
 	kb.add(KeyboardButton('Напоминания на сегодня'))
 	kb.insert(KeyboardButton('Редактировать профиль'))
+	kb.add(KeyboardButton('Получить excel-файл'))
 	return kb
 
 

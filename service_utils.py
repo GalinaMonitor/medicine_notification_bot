@@ -26,7 +26,7 @@ def check_notifications_opp(patient: Patient, checked_date: date) -> List[str]:
 			notification_list.append(
 				f'{checked_date.strftime("%d-%m-%y")}: {patient.history_number} {patient.fullname} - БЕЗ ОПП.Повторные анализы'
 			)
-		if patient.discharge_date and checked_date - patient.discharge_date == timedelta(days=12):
+		if patient.discharge_date and checked_date - patient.discharge_date == timedelta(weeks=12):
 			notification_list.append(
 				f'{checked_date.strftime("%d-%m-%y")}: {patient.history_number} {patient.fullname} - БЕЗ ОПП.Повторный визит'
 			)

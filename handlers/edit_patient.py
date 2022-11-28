@@ -32,17 +32,12 @@ async def find_patient_answer(message: types.Message):
 	)
 
 
-@dp.message_handler(lambda message: not message.text.isdigit(), state=EditPatientStatesGroup.request)
-async def check_history_number(message: types.Message):
-	await message.answer('Введите правильный номер истории болезни')
-
-
 @dp.message_handler(state=EditPatientStatesGroup.request)
 async def find_patient(message: types.Message, state: FSMContext) -> None:
 	async with state.proxy() as data:
-		data['history_number'] = int(message.text)
+		data['history_number'] = message.text
 	try:
-		patient = PatientService.get_patient(history_number=int(message.text))
+		patient = PatientService.get_patient(history_number=message.text)
 		await message.answer(
 			get_patient_info(patient),
 			reply_markup=get_edit_patient_kb()

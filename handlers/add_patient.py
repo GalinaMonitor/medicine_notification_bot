@@ -7,6 +7,7 @@ from aiogram_calendar.simple_calendar import calendar_callback
 from bot import dp, NewPatientStatesGroup, bot
 from db.exceptions import NotFoundException
 from db.services.patients import PatientService
+from db.sql_models import Patient
 from keyboards.keyboard import get_cancel_kb, get_intro_kb, get_true_or_false
 
 
@@ -20,32 +21,13 @@ async def subscriptions_info(message: types.Message):
 		- День поступления
 		- День выписки
 		- ОПП
+		- Гепа-мерц
 		Для отмены операции нажмите кнопку /cancel в скрытом меню
 		''',
 		reply_markup=get_cancel_kb()
 	)
-	await message.answer('Введите номер истории болезни')
-	await NewPatientStatesGroup.history_number.set()
-
-
-@dp.message_handler(lambda message: not message.text.isdigit(), state=NewPatientStatesGroup.history_number)
-async def check_history_number(message: types.Message):
-	await message.answer('Введите правильный номер истории болезни')
-
-
-@dp.message_handler(state=NewPatientStatesGroup.history_number)
-async def load_history_number(message: types.Message, state: FSMContext) -> None:
-	try:
-		PatientService.get_patient(int(message.text))
-	except NotFoundException:
-		async with state.proxy() as data:
-			data['history_number'] = int(message.text)
-
-		await message.answer('Введите ФИО')
-		await NewPatientStatesGroup.next()
-		return
-
-	await message.answer('Пациент с этим номером в базе уже есть. Введите другой номер истории болезни')
+	await message.answer('Введите ФИО')
+	await NewPatientStatesGroup.fullname.set()
 
 
 @dp.message_handler(state=NewPatientStatesGroup.fullname)
@@ -53,8 +35,28 @@ async def load_fullname(message: types.Message, state: FSMContext) -> None:
 	async with state.proxy() as data:
 		data['fullname'] = message.text
 
-	await message.answer('Введите дату поступления', reply_markup=await SimpleCalendar().start_calendar())
+	await message.answer('Введите номер истории болезни')
 	await NewPatientStatesGroup.next()
+
+
+@dp.message_handler(state=NewPatientStatesGroup.history_number)
+async def load_history_number(message: types.Message, state: FSMContext) -> None:
+	try:
+		Patient.history_number_validation(message.text)
+	except ValueError:
+		await message.answer('Номер должен соответствовать формату "номер-год". Введите другой номер истории болезни')
+		return
+	try:
+		PatientService.get_patient(message.text)
+	except NotFoundException:
+		async with state.proxy() as data:
+			data['history_number'] = message.text
+
+		await message.answer('Введите дату поступления пациента', reply_markup=await SimpleCalendar().start_calendar())
+		await NewPatientStatesGroup.next()
+		return
+
+	await message.answer('Пациент с этим номером в базе уже есть. Введите другой номер истории болезни')
 
 
 @dp.callback_query_handler(calendar_callback.filter(), state=NewPatientStatesGroup.admission_date)
@@ -77,7 +79,7 @@ async def load_admission_date(callback_query: CallbackQuery, callback_data: dict
 async def is_discharge_date(callback_query: CallbackQuery):
 	if callback_query.data == 'True':
 		await callback_query.message.answer(
-			f'Введите дату выписки',
+			f'Введите дату выписки пациента',
 			reply_markup=await SimpleCalendar().start_calendar()
 		)
 	else:
