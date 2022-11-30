@@ -33,6 +33,6 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ../medicine_notification_bot
+            cd /opt/medicine_notification_bot
             echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
             docker compose pull && docker compose up --build -d
