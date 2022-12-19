@@ -14,6 +14,9 @@ async def get_excel(message: types.Message):
 	patients = PatientService.get_patients()
 	wb = openpyxl.Workbook()
 	sheet = wb.active
+	sheet.column_dimensions['B'].width = 20
+	sheet.column_dimensions['C'].width = 20
+	sheet.column_dimensions['D'].width = 20
 	sheet.append(('Номер', 'ФИО', 'Дата поступления', 'Дата выписки', 'ОПП', 'Гепа-мерц'))
 	for patient in patients:
 		sheet.append(
